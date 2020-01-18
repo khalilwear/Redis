@@ -212,4 +212,9 @@ class Json2redisApplicationTests {
         System.out.println("总数为："+redisUtil.pfcount("hyper"));
     }
 
+    @Test
+    void test(){
+        System.out.println("git success");
+    }
+
 }
