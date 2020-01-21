@@ -8,6 +8,7 @@ import redis.clients.jedis.BinaryClient;
 import redis.clients.jedis.SortingParams;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @SpringBootTest
@@ -17,11 +18,11 @@ class Json2redisApplicationTests {
     private RedisUtil redisUtil;
 
     @Test
-    void get3set() throws UnsupportedEncodingException {
+    void get3set() {
         byte[] key="name".getBytes();
         byte[] value="khalil".getBytes();
         redisUtil.set(key,value,0);
-        System.out.println(new String(redisUtil.get(key,0),"utf-8"));
+        System.out.println(new String(redisUtil.get(key,0), StandardCharsets.UTF_8));
     }
 
     @Test
@@ -68,7 +69,7 @@ class Json2redisApplicationTests {
 
     @Test
     void hmset(){
-        Map user=new HashMap();
+        Map<String,String> user=new HashMap();
         user.put("id","1");
         user.put("name","caojing");
         user.put("age","25");
@@ -214,7 +215,7 @@ class Json2redisApplicationTests {
 
     @Test
     void test(){
-        System.out.println("git upload success");
+        System.out.println("git upload test");
     }
 
 }
