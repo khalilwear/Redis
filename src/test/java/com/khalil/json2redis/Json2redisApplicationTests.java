@@ -214,7 +214,7 @@ class Json2redisApplicationTests {
 
     @Test
     void test(){
-        System.out.println("git success");
+        System.out.println("git upload success");
     }
 
 }
