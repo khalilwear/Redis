@@ -12,10 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import redis.clients.jedis.*;
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.params.geo.GeoRadiusParam;
 
 @Component
 @Slf4j
@@ -2484,6 +2483,100 @@ public class RedisUtil{
         }
         return count;
     }
+
+    public Jedis getJedis(){
+        Jedis jedis=null;
+        try {
+            jedis=jedisPool.getResource();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            returnResource(jedisPool, jedis);
+        }
+        return jedis;
+    }
+
+    //geoHash添加元素
+    public Long geoAdd(String key, double longitude, double latitude, String member){
+        Jedis jedis=null;
+        Long count=0l;
+        try {
+            jedis=jedisPool.getResource();
+            count=jedis.geoadd(key,longitude,latitude,member);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            returnResource(jedisPool, jedis);
+        }
+        return count;
+    }
+
+    //geoHash计算两个元素的距离
+    public Double geoDist(String key, String member1, String member2, GeoUnit unit){
+        Jedis jedis=null;
+        Double count=0d;
+        try {
+            jedis=jedisPool.getResource();
+            count=jedis.geodist(key,member1,member2,unit);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            returnResource(jedisPool, jedis);
+        }
+        return count;
+    }
+
+    //geoHash根据元素名称获得元素坐标
+    public List<GeoCoordinate> getGeoPos(String key, String member){
+        Jedis jedis=null;
+        List<GeoCoordinate> list=null;
+        try {
+            jedis=jedisPool.getResource();
+            list=jedis.geopos(key,member);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            returnResource(jedisPool, jedis);
+        }
+        return list;
+    }
+
+    //根据元素名获得该元素指定距离内附近的元素
+    public List<GeoRadiusResponse> geoRadiusByMember(String key, String member, double radius, GeoUnit unit,
+                                                 GeoRadiusParam param){
+        Jedis jedis=null;
+        List<GeoRadiusResponse> list=null;
+        try {
+            jedis=jedisPool.getResource();
+            list=jedis.georadiusByMember(key,member,radius,unit,param);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            returnResource(jedisPool, jedis);
+        }
+        return list;
+    }
+
+    //根据经纬度获得该元素指定距离内附近的元素
+    public List<GeoRadiusResponse> geoRadius(String key, double longitude, double latitude, double radius,
+                                             GeoUnit unit, GeoRadiusParam param){
+        Jedis jedis=null;
+        List<GeoRadiusResponse> list=null;
+        try {
+            jedis=jedisPool.getResource();
+            list=jedis.georadius(key,longitude,latitude,radius,unit,param);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            returnResource(jedisPool, jedis);
+        }
+        return list;
+    }
+
+
+
+
+
 
 
 
