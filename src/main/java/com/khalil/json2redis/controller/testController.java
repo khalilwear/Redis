@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.khalil.json2redis.entity.User;
 import com.khalil.json2redis.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 
@@ -59,6 +61,17 @@ public class testController {
         pipeline.close();
         return count.get()<=maxCount;
     }
+
+//    @RequestMapping("/setS/{key}/{value}")
+//    public String setSentinel(@PathVariable String key,@PathVariable String value){
+//        return redisUtil.setSentinel(key,value,0);
+//    }
+
+    @RequestMapping("/setC/{key}/{value}")
+    public String setCluster(@PathVariable String key,@PathVariable String value){
+        return redisUtil.setCluster(key,value);
+    }
+
 
 
 }

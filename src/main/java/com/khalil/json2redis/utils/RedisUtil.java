@@ -23,6 +23,34 @@ public class RedisUtil{
     @Autowired
     private JedisPool jedisPool;
 
+//    @Autowired
+//    private JedisSentinelPool jedisSentinelPool;
+
+    @Autowired
+    private JedisCluster jedisCluster;
+
+//    public String setSentinel(String key, String value,int indexdb) {
+//        Jedis jedis = null;
+//        try {
+//            jedis = jedisSentinelPool.getResource();
+//            jedis.select(indexdb);
+//            return jedis.set(key, value);
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            return "0";
+//        }
+//    }
+
+    public String setCluster(String key, String value) {
+        try {
+            return jedisCluster.set(key, value);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return "0";
+        }
+    }
+
+
     /**
      * <p>
      * 通过key获取储存在redis中的value
@@ -2572,6 +2600,8 @@ public class RedisUtil{
         }
         return list;
     }
+
+
 
 
 

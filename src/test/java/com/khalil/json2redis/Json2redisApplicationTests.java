@@ -213,9 +213,9 @@ class Json2redisApplicationTests {
         System.out.println("总数为："+redisUtil.pfcount("hyper"));
     }
 
-    @Test
-    void test(){
-        System.out.println("git upload test");
-    }
+//    @Test
+//    void test(){
+//        redisUtil.setSentinel("name","12",0);
+//    }
 
 }
