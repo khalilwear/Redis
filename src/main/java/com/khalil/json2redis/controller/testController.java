@@ -13,12 +13,19 @@ import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 
 import java.io.IOException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 public class testController {
 
     @Autowired
     private RedisUtil redisUtil;
+
+    @Autowired
+    private Lock lock;
+
+    private int num=100;
 
     @RequestMapping("/set")
     public String set(){
@@ -71,6 +78,45 @@ public class testController {
     public String setCluster(@PathVariable String key,@PathVariable String value){
         return redisUtil.setCluster(key,value);
     }
+
+    @RequestMapping("/sell")
+    public void sell() throws InterruptedException {
+        SellThread st=new SellThread();
+        Thread t1=new Thread(st,"窗口1--");
+        Thread t2=new Thread(st,"窗口2--");
+        Thread t3=new Thread(st,"窗口3--");
+        t1.start();
+        t2.start();
+        t3.start();
+        Thread.currentThread().join();
+    }
+
+    class SellThread implements Runnable{
+
+        @Override
+        public void run() {
+            while (num>0) {
+                lock.lock();
+                try {
+                    if (num > 0) {
+                        System.out.println(Thread.currentThread().getName() + (num--));
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }finally {
+                    lock.unlock();
+                }
+            }
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+        }
+    }
+
+
 
 
 

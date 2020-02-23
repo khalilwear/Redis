@@ -218,4 +218,13 @@ class Json2redisApplicationTests {
 //        redisUtil.setSentinel("name","12",0);
 //    }
 
+    @Test
+    void test() throws InterruptedException {
+        for (int i = 0; i < 100; i++) {
+            Thread.sleep(100);
+            redisUtil.setCluster("class"+i,"student"+i);
+        }
+
+    }
+
 }
